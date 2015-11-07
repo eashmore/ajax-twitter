@@ -3,10 +3,14 @@ var FollowToggle = function(el) {
   this.userId = el.dataset.userId;
 
   this.render = function() {
+    this.el.removeAttribute('disabled');
     if (this.el.dataset.followState === "followed") {
       this.el.innerHTML = "Unfollow!";
     } else if (this.el.dataset.followState === 'unfollowed') {
       this.el.innerHTML = "Follow!";
+    } else {
+      this.el.innerHTML = "loading...";
+      this.el.setAttribute('disabled', true);
     }
   };
 
@@ -14,14 +18,16 @@ var FollowToggle = function(el) {
     event.preventDefault();
 
     var requestType;
-    var url = "/users/" + this.userId + "/follow";
-
     if (this.el.dataset.followState === 'followed') {
       requestType = 'DELETE';
     } else if (this.el.dataset.followState === 'unfollowed') {
       requestType = 'POST';
     }
 
+    this.el.dataset.followState = 'changeState';
+    this.render();
+
+    var url = "/users/" + this.userId + "/follow";
     var httpRequest = new XMLHttpRequest();
 
     httpRequest.onreadystatechange = function () {
