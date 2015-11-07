@@ -57,4 +57,12 @@ class User < ActiveRecord::Base
   def follows?(user)
     out_follows.exists?(followee_id: user.id)
   end
+
+  def followState(user)
+    if self.follows?(user)
+      return "followed"
+    else
+      return "unfollowed"
+    end
+  end
 end
